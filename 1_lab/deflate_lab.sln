@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34616.47
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "deflate_lab", "deflate_lab.csproj", "{2C05BA17-C4FC-412D-B66F-9A57C17F1020}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C05BA17-C4FC-412D-B66F-9A57C17F1020}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C05BA17-C4FC-412D-B66F-9A57C17F1020}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C05BA17-C4FC-412D-B66F-9A57C17F1020}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C05BA17-C4FC-412D-B66F-9A57C17F1020}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0511A395-5DA1-4958-BD03-282B078E32EF}
+	EndGlobalSection
+EndGlobal
