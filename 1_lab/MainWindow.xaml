@@ -5,23 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:deflate_lab"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="528">
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="37*"/>
-            <ColumnDefinition Width="49*"/>
-            <ColumnDefinition Width="90*"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="5*"/>
-            <RowDefinition Height="26*"/>
-        </Grid.RowDefinitions>
-        <Border BorderBrush="LightGray" BorderThickness="1" Grid.ColumnSpan="2"/>
-        <Button Content="Закодировать" HorizontalAlignment="Left" Margin="66,266,0,0" VerticalAlignment="Top" Height="41" Width="148" Click="Button_Click" FontSize="20" Grid.Column="1" Grid.Row="1" Grid.ColumnSpan="2"/>
-        <Button Content="Выбрать" HorizontalAlignment="Center" VerticalAlignment="Center" Height="31" Width="76" FontSize="16"/>
-        <TextBlock x:Name="textblock" Grid.Column="1" HorizontalAlignment="Left" Margin="40,45,0,0" Grid.Row="1" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Grid.ColumnSpan="2" Height="Auto" Width="Auto"/>
-
-
-
-    </Grid>
+        Title="MainWindow" Height="192" Width="378">
+    <StackPanel Margin="10px">
+        <Button Content="Выбрать файл" Height="41" Width="148" FontSize="18" Margin="0,0,0,10" Click="ButtonChooseFile"/>
+        <TextBlock x:Name="SelectedFileTextBox" Text="Файл не выбран" Height="30" Width="Auto" TextAlignment="Center" FontSize="18" Margin="0,0,0,10" Foreground="LightGray"/>
+        <Button Content="Закодировать" Height="41" Width="148" Click="Button_Click" FontSize="18"/>
+    </StackPanel>
 </Window>
