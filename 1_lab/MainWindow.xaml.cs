@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Windows;
-using System.Windows.Media;
 
 namespace deflate_lab
 {
@@ -18,8 +18,14 @@ namespace deflate_lab
 
         void Button_Click(object sender, RoutedEventArgs e)
         {
-            List<Tuple<int, int, char>> compressed = LZ77.Compress(9, 7, "ДЕНИС_ГИРИЧЕВ_ЧМО!");
+            string compressed = LZ77.Compress(9, 7, "@@@@!@@$!@%f423f2!");
 
+            Huffman huffman = new Huffman();
+            string compressedHuffman = huffman.Compress(compressed);
+
+            string decompressedString = huffman.Decompress(compressedHuffman);
+
+            var result = LZ77.Decompress(decompressedString);
         }
     }
 }

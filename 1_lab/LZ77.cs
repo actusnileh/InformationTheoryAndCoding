@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace deflate_lab
 {
     public class LZ77
     {
-        public static List<Tuple<int, int, char>> Compress(int dict, int buffer, string input)
+        public static string Compress(int dict, int buffer, string input)
         {
             List<Tuple<int, int, char>> compressed = new List<Tuple<int, int, char>>();
 
@@ -53,11 +54,23 @@ namespace deflate_lab
                     }
                 }
             }
-            return compressed;
+            string result = string.Join(",", compressed.Select(t => $"{t.Item1}:{t.Item2}:{t.Item3}"));
+            return result;
         }
 
-        public static string Decompress(List<Tuple<int, int, char>> compressed)
+        public static string Decompress(string input)
         {
+            string[] parts = input.Split(',');
+
+            List<Tuple<int, int, char>> compressed = new List<Tuple<int, int, char>>();
+            foreach (string part in parts)
+            {
+                string[] tupleParts = part.Split(':');
+                int start = int.Parse(tupleParts[0]);
+                int length = int.Parse(tupleParts[1]);
+                char symbol = tupleParts[2][0];
+                compressed.Add(Tuple.Create(start, length, symbol));
+            }
             string decompressed = "";
 
             foreach (var tuple in compressed)
