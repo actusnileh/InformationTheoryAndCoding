@@ -1,6 +1,7 @@
 ﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -21,23 +22,12 @@ namespace deflate_lab
             InitializeComponent();
         }
 
-        void Button_Click(object sender, RoutedEventArgs e)
-        {
-            string compressed = LZ77.Compress(9, 7, "@@@@!@@$!@%f423f2!");
-
-            Huffman huffman = new Huffman();
-            string compressedHuffman = huffman.Compress(compressed);
-
-            string decompressedString = huffman.Decompress(compressedHuffman);
-
-            var result = LZ77.Decompress(decompressedString);
-        }
-
         void ButtonChooseFile(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog
             {
-                DefaultExt = ".txt"
+                DefaultExt = ".txt",
+                Filter = "(*.txt)|*.txt",
             };
 
             bool? result = dialog.ShowDialog();
@@ -53,6 +43,37 @@ namespace deflate_lab
                 SelectedFileTextBox.Text = "Файл не выбран";
                 SelectedFileTextBox.Foreground = Brushes.LightGray;
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            string text, compressedHuffman, decompressedHuffman, decompressedLZ77;
+
+            using (StreamReader file = new StreamReader(filepath))
+            {
+                text = file.ReadToEnd();
+                string LZ77Encode_file = LZ77.Compress(100, 50, text);
+
+                Huffman huffman = new Huffman();
+                compressedHuffman = huffman.Compress(LZ77Encode_file);
+
+                decompressedHuffman = huffman.Decompress(compressedHuffman);
+                decompressedLZ77 = LZ77.Decompress(decompressedHuffman);
+            }
+
+            string compressed_filepath = filepath.Replace(".txt", "_compressed.txt");
+            using (StreamWriter compressed_file = new StreamWriter(compressed_filepath))
+            {
+                compressed_file.Write(compressedHuffman);
+            }
+            SelectedFileTextBox.Text = "Закодировано";
+
+            string decompressed_filepath = filepath.Replace(".txt", "_decompressed.txt");
+            using (StreamWriter decompressed_file = new StreamWriter(decompressed_filepath))
+            {
+                decompressed_file.Write(decompressedLZ77);
+            }
+            SelectedFileTextBox.Text = "Раскодировано";
         }
     }
 }

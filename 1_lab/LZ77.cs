@@ -68,7 +68,11 @@ namespace deflate_lab
                 string[] tupleParts = part.Split(':');
                 int start = int.Parse(tupleParts[0]);
                 int length = int.Parse(tupleParts[1]);
-                char symbol = tupleParts[2][0];
+                char symbol;
+                if (tupleParts[2] != "")
+                    symbol = tupleParts[2][0];
+                else
+                    symbol = '\0';
                 compressed.Add(Tuple.Create(start, length, symbol));
             }
             string decompressed = "";

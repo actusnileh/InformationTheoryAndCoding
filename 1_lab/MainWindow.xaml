@@ -1,14 +1,20 @@
-﻿<Window x:Class="deflate_lab.MainWindow"
+﻿<Window xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        x:Class="deflate_lab.MainWindow"
+        Style="{StaticResource MaterialDesignWindow}"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:deflate_lab"
         mc:Ignorable="d"
-        Title="MainWindow" Height="192" Width="378">
-    <StackPanel Margin="10px">
-        <Button Content="Выбрать файл" Height="41" Width="148" FontSize="18" Margin="0,0,0,10" Click="ButtonChooseFile"/>
-        <TextBlock x:Name="SelectedFileTextBox" Text="Файл не выбран" Height="30" Width="Auto" TextAlignment="Center" FontSize="18" Margin="0,0,0,10" Foreground="LightGray"/>
-        <Button Content="Закодировать" Height="41" Width="148" Click="Button_Click" FontSize="18"/>
-    </StackPanel>
+        ResizeMode="NoResize"
+        Icon="D:\University\Kodirovanie_4_sem\1_lab\Resources\Icon.png"
+        Title="DeflateLab" Height="192" Width="239">
+    <materialDesign:Card Margin="5px">
+        <StackPanel Margin="5px">
+            <Button Content="Выбрать файл" Height="41" Width="Auto" FontSize="18" Margin="0,0,0,10" Click="ButtonChooseFile"/>
+            <TextBlock x:Name="SelectedFileTextBox" Text="Файл не выбран" Height="30" Width="Auto" TextAlignment="Center" FontSize="18" Margin="0,0,0,10" Foreground="LightGray"/>
+            <Button Content="Deflate" Height="41" Width="Auto" Click="Button_Click" FontSize="18"/>
+        </StackPanel>
+    </materialDesign:Card>
 </Window>
