@@ -1,9 +1,6 @@
 ﻿using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Media;
 
@@ -15,7 +12,6 @@ namespace deflate_lab
     public partial class MainWindow : Window
     {
         string filepath;
-        string filename;
 
         public MainWindow()
         {
@@ -45,35 +41,47 @@ namespace deflate_lab
             }
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        void Button_Click(object sender, RoutedEventArgs e)
         {
-            string text, compressedHuffman, decompressedHuffman, decompressedLZ77;
+            string text, decompressedHuffman, decompressedLZ77;
+            byte[] compressedHuffman;
 
             using (StreamReader file = new StreamReader(filepath))
             {
                 text = file.ReadToEnd();
-                string LZ77Encode_file = LZ77.Compress(100, 50, text);
+                string LZ77Encode_file = LZ77.Compress(10000, 5000, text);
 
                 Huffman huffman = new Huffman();
                 compressedHuffman = huffman.Compress(LZ77Encode_file);
-
                 decompressedHuffman = huffman.Decompress(compressedHuffman);
                 decompressedLZ77 = LZ77.Decompress(decompressedHuffman);
+
             }
 
             string compressed_filepath = filepath.Replace(".txt", "_compressed.txt");
-            using (StreamWriter compressed_file = new StreamWriter(compressed_filepath))
+            using (FileStream compressed_file = new FileStream(compressed_filepath, FileMode.Create))
             {
-                compressed_file.Write(compressedHuffman);
+                compressed_file.Write(compressedHuffman, 0, compressedHuffman.Length);
             }
-            SelectedFileTextBox.Text = "Закодировано";
+            
 
             string decompressed_filepath = filepath.Replace(".txt", "_decompressed.txt");
             using (StreamWriter decompressed_file = new StreamWriter(decompressed_filepath))
             {
                 decompressed_file.Write(decompressedLZ77);
             }
-            SelectedFileTextBox.Text = "Раскодировано";
+            SelectedFileTextBox.Text = "Готово";
+
+            FileInfo SelectedFile = new FileInfo(filepath);
+            long SelectedFileInBytes = SelectedFile.Length;
+
+            FileInfo EncodedFile = new FileInfo(compressed_filepath);
+            long EncodedFileInBytes = EncodedFile.Length;
+
+            FileInfo DecodedFile = new FileInfo(decompressed_filepath);
+            long DecodedFileInBytes = DecodedFile.Length;
+
+            DeflateStartButton.Content = $"{SelectedFileInBytes / 1024} -> {EncodedFileInBytes / 1024} -> {DecodedFileInBytes / 1024}";
         }
     }
 }

@@ -8,13 +8,12 @@
         xmlns:local="clr-namespace:deflate_lab"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Icon="D:\University\Kodirovanie_4_sem\1_lab\Resources\Icon.png"
-        Title="DeflateLab" Height="192" Width="239">
+        Title="DeflateLab" Height="183" Width="239">
     <materialDesign:Card Margin="5px">
         <StackPanel Margin="5px">
             <Button Content="Выбрать файл" Height="41" Width="Auto" FontSize="18" Margin="0,0,0,10" Click="ButtonChooseFile"/>
             <TextBlock x:Name="SelectedFileTextBox" Text="Файл не выбран" Height="30" Width="Auto" TextAlignment="Center" FontSize="18" Margin="0,0,0,10" Foreground="LightGray"/>
-            <Button Content="Deflate" Height="41" Width="Auto" Click="Button_Click" FontSize="18"/>
+            <Button x:Name="DeflateStartButton" Content="Deflate" Height="41" Width="Auto" Click="Button_Click" FontSize="18"/>
         </StackPanel>
     </materialDesign:Card>
 </Window>
