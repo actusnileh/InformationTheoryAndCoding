@@ -1,0 +1,151 @@
+﻿<Window x:Class="BMPLab.MainWindow"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        ResizeMode="NoResize"
+        Style="{StaticResource MaterialDesignWindow}"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BMPLab"
+        mc:Ignorable="d"
+        Title="BMPLab" Height="740" Width="375">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <Grid>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Button 
+                        x:Name="ChooseFileButton"
+                        Content="Выбрать файл"
+                        Margin="0,16,0,0"
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
+                        HorizontalAlignment="Center" 
+                        Foreground="White" 
+                        Click="ChooseFileButton_Click" 
+                    />
+                    <Button 
+                        x:Name="GoToDirectory"
+                        Content="Директория"
+                        Margin="16,16,0,0"
+                        IsEnabled="{Binding DataContext.ControlsEnabled, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                        Style="{StaticResource MaterialDesignRaisedSecondaryDarkButton}"
+                        HorizontalAlignment="Center" 
+                        Foreground="White" Click="GoToDirectory_Click" 
+                    />
+                </StackPanel>
+                <materialDesign:Card Padding="10" Margin="16" MaxHeight="470">
+                    <TreeView MinWidth="320" x:Name="TreeViewHeader">
+                        <TreeViewItem
+                        Header="Заголовок" IsExpanded="True">
+
+                            <TreeViewItem
+                                  Header="Код">
+                                <TextBlock>
+                                    <Run x:Name="Code_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                                Header="Размер файла" >
+                                <TextBlock>
+                                    <Run x:Name="FileSize_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                          Header="Ширина изображения">
+                                <TextBlock>
+                                    <Run x:Name="Width_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                          Header="Высота изображения">
+                                <TextBlock>
+                                    <Run x:Name="Height_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                          Header="Число пикселей">
+                                <TextBlock>
+                                    <Run x:Name="PixelCount_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                          Header="Бит/пиксел">
+                                <TextBlock>
+                                    <Run x:Name="BitPixel_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                          Header="Тип сжатия">
+                                <TextBlock>
+                                    <Run x:Name="EncodingType_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                          Header="Размер сжатого изображения">
+                                <TextBlock>
+                                    <Run x:Name="EncodingFileSize_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                          Header="Горизонтальное разрешение">
+                                <TextBlock>
+                                    <Run x:Name="Horizontal_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                          Header="Вертикальное разрешение">
+                                <TextBlock>
+                                    <Run x:Name="Vertical_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                          Header="Кол-во используемых цветов">
+                                <TextBlock>
+                                    <Run x:Name="CountUsedColors_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                            <TreeViewItem
+                          Header="Кол-во важных цветов">
+                                <TextBlock>
+                                    <Run x:Name="CountImportantColors_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
+
+                        </TreeViewItem>
+                    </TreeView>
+                </materialDesign:Card>
+                <materialDesign:Card Padding="10" Margin="16,0,16,16">
+                    <StackPanel Orientation="Vertical">
+                        <Button 
+                            x:Name="СolorСomponentsButton"
+                            Content="Разложить цветовые составляющие"
+                            IsEnabled="False"
+                            Style="{StaticResource MaterialDesignPaperDarkButton}"
+                            HorizontalAlignment="Center" Click="СolorСomponentsButton_Click"/>
+                        <Separator Margin="16"/>
+                        <Button 
+                            x:Name="BitComponentsButton"
+                            Content="Разложить битовые срезы"
+                            IsEnabled="False"
+                            Style="{StaticResource MaterialDesignPaperDarkButton}"
+                            HorizontalAlignment="Center" Click="BitComponentsButton_Click"/>
+                    </StackPanel>
+                </materialDesign:Card>
+            </StackPanel>
+            <materialDesign:Snackbar 
+            x:Name="ColorComponentsReady"
+            MessageQueue="{materialDesign:MessageQueue}"/>
+        </Grid>
+    </ScrollViewer>
+</Window>
