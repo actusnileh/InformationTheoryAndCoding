@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 
 namespace deflate_lab
 {
     public class Huffman
     {
+        [Serializable]
         public class HuffmanNode
         {
             public char Symbol { get; set; } // Символ
@@ -64,8 +67,23 @@ namespace deflate_lab
                 }
                 encodedBytes.Add(Convert.ToByte(encodedBits.ToString(), 2));
             }
+            // Сериализуем дерево Хаффмана в массив байтов
+            byte[] treeBytes;
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                formatter.Serialize(memoryStream, root);
+                treeBytes = memoryStream.ToArray();
+            }
 
-            return encodedBytes.ToArray();
+            // Записываем размер дерева перед деревом
+            List<byte> compressedBytes = new List<byte>();
+            compressedBytes.AddRange(BitConverter.GetBytes(treeBytes.Length));
+            compressedBytes.AddRange(treeBytes);
+
+            compressedBytes.AddRange(encodedBytes); // Добавляем закодированные байты
+
+            return compressedBytes.ToArray();
         }
 
         // Генерация таблицы частот символов
@@ -125,40 +143,57 @@ namespace deflate_lab
             if (encodedBytes == null || encodedBytes.Length == 0)
                 throw new ArgumentException("Пустой файл подан.");
 
+            // Считываем размер дерева
+            int treeSize = BitConverter.ToInt32(encodedBytes, 0);
+            byte[] treeBytes = new byte[treeSize];
+            Array.Copy(encodedBytes, sizeof(int), treeBytes, 0, treeSize);
+
+            // Восстанавливаем дерево Хаффмана из массива байтов
+            HuffmanNode root;
+            using (MemoryStream memoryStream = new MemoryStream(treeBytes))
+            {
+                BinaryFormatter formatter = new BinaryFormatter();
+                root = (HuffmanNode)formatter.Deserialize(memoryStream);
+            }
+
+            // Декодируем закодированные данные
+            List<byte> encodedData = new List<byte>(encodedBytes.Skip(sizeof(int) + treeSize));
             StringBuilder decodedBits = new StringBuilder();
 
             // Декодируем байты обратно в биты
-            foreach (byte b in encodedBytes)
+            foreach (byte b in encodedData)
             {
                 string bits = Convert.ToString(b, 2).PadLeft(8, '0');
                 decodedBits.Append(bits);
             }
 
-            // Убираем нули в конце если есть
+            // Убираем нули в конце, если есть
             int paddingCount = decodedBits[decodedBits.Length - 1] - '0';
             decodedBits.Remove(decodedBits.Length - paddingCount, paddingCount);
 
-            string encodedMessage = decodedBits.ToString(); // Переводим биты в строчку
-            string decodedMessage = "";
+            string encodedMessage = decodedBits.ToString(); // Получаем закодированное сообщение
 
-            HuffmanNode currentNode = root; // Получаем наше дерево что бы раскодировать
+            // Теперь нужно пройтись по дереву Хаффмана, чтобы раскодировать сообщение
+            StringBuilder decodedMessage = new StringBuilder();
+            HuffmanNode currentNode = root; // Начинаем с корня
 
-            // Двигаемся по дереву
             foreach (char bit in encodedMessage)
             {
-                if (bit == '0') // Если 0 переходим к левому потомку
+                // Двигаемся по дереву в соответствии с каждым битом
+                if (bit == '0')
                     currentNode = currentNode.Left;
-                else if (bit == '1') // Наоборот
+                else if (bit == '1')
                     currentNode = currentNode.Right;
 
-                // Если получили узел, то добавляем его символ к раскодированному сообщению
+                // Если достигли листа, добавляем символ в декодированное сообщение и возвращаемся к корню
                 if (currentNode.Left == null && currentNode.Right == null)
                 {
-                    decodedMessage += currentNode.Symbol;
-                    currentNode = root; // возвращаесся к корню
+                    decodedMessage.Append(currentNode.Symbol);
+                    currentNode = root;
                 }
             }
-            return decodedMessage;
+
+            return decodedMessage.ToString();
         }
     }
 }
