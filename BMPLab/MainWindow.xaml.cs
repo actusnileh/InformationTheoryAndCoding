@@ -1,7 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Enumeration;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -164,26 +163,25 @@ namespace BMPLab
 
         static void SaveColorChannelToFile(string fileName, byte[] channel, int width, int height, int bitsPerPixel, string filepath)
         {
-            // Создаем массив байт для нового изображения
             int bytesPerPixel = bitsPerPixel / 8;
             byte[] fileBytes = new byte[channel.Length * bytesPerPixel + 54];
 
-            // Копируем заголовок BMP
             Array.Copy(File.ReadAllBytes(filepath), fileBytes, 54);
 
-            // Записываем цветовые компоненты в новый файл
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
                 {
                     int pixelOffset = 54 + (y * width + x) * bytesPerPixel;
-                    fileBytes[pixelOffset] = channel[y * width + x];
-                    fileBytes[pixelOffset + 1] = channel[y * width + x];
-                    fileBytes[pixelOffset + 2] = channel[y * width + x];
+                    if (fileName.Contains("red"))
+                        fileBytes[pixelOffset + 2] = channel[y * width + x];
+                    else if (fileName.Contains("green"))
+                        fileBytes[pixelOffset + 1] = channel[y * width + x];
+                    else if (fileName.Contains("blue"))
+                        fileBytes[pixelOffset] = channel[y * width + x];
+
                 }
             }
-
-            // Сохраняем новое изображение
             File.WriteAllBytes(filepath.Replace(".bmp", fileName), fileBytes);
         }
 
@@ -205,7 +203,7 @@ namespace BMPLab
             for (int i = 0; i < pixelData.Length - 2; i += 3)
             {
                 byte gray = (byte)(0.2126 * pixelData[i + 2] + 0.7152 * pixelData[i + 1] + 0.0722 * pixelData[i]);
-                pixelData[i] = gray;          // Компонент B
+                pixelData[i] = gray;      // Компонент B
                 pixelData[i + 1] = gray;  // Компонент G
                 pixelData[i + 2] = gray;  // Компонент R
             }
@@ -214,13 +212,15 @@ namespace BMPLab
             grayimage.Write(header, 0, header.Length);
             grayimage.Write(pixelData, 0, pixelData.Length);
 
-            for (int slice = 0; slice < 141; slice += 20)
+            int[] bitValues = [250, 230, 180, 130, 150, 100, 50, 10];
+
+            foreach (int bitValue in bitValues)
             {
                 for (int i = 0; i < pixelData.Length; i++)
                 {
-                    pixelData[i] = (byte)(pixelData[i] & (255 - slice));
+                    pixelData[i] = (byte)(pixelData[i] & bitValue);
                 }
-                string outputFilePath = Path.Combine(filepath.Replace(".bmp", "_slices"), $"slice_{slice}.bmp");
+                string outputFilePath = Path.Combine(filepath.Replace(".bmp", "_slices"), $"slice_{bitValue}.bmp");
 
                 using FileStream outFile = new(outputFilePath, FileMode.Create, FileAccess.Write);
                 outFile.Write(header, 0, header.Length);
