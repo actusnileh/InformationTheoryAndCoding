@@ -63,6 +63,7 @@ namespace BMPLab
             // Размер файла
             int file_size = BitConverter.ToInt32(header, 2);
 
+            // Где начинается сама картинка
             pixelDataOffset = BitConverter.ToInt32(header, 10);
 
             // Ширина изображения
@@ -102,6 +103,7 @@ namespace BMPLab
             Run fileSizeRun = (Run)headerNode.FindName("FileSize_Header");
             Run widthRun = (Run)headerNode.FindName("Width_Header");
             Run heightRun = (Run)headerNode.FindName("Height_Header");
+            Run pixelOffsetRun = (Run)headerNode.FindName("ImageStart_Header");
             Run pixelCount = (Run)headerNode.FindName("PixelCount_Header");
             Run bitPixel = (Run)headerNode.FindName("BitPixel_Header");
             Run encodingType = (Run)headerNode.FindName("EncodingType_Header");
@@ -115,6 +117,7 @@ namespace BMPLab
             fileSizeRun.Text = file_size.ToString();
             widthRun.Text = width.ToString();
             heightRun.Text = height.ToString();
+            pixelOffsetRun.Text = pixelDataOffset.ToString();
             pixelCount.Text = planes_number.ToString();
             bitPixel.Text = bit_pixel.ToString();
             encodingType.Text = compressionType.ToString();
@@ -187,7 +190,10 @@ namespace BMPLab
 
         void BitComponentsButton_Click(object sender, RoutedEventArgs e)
         {
-            Directory.CreateDirectory(filepath.Replace(".bmp", "_slices"));
+            string directory = Path.GetDirectoryName(filepath);
+            string fileName = Path.GetFileNameWithoutExtension(filepath);
+            string outputDirectory = Path.Combine(directory, fileName + "_slices");
+            Directory.CreateDirectory(outputDirectory);
 
             byte[] header;
             byte[] pixelData;
@@ -212,21 +218,22 @@ namespace BMPLab
             grayimage.Write(header, 0, header.Length);
             grayimage.Write(pixelData, 0, pixelData.Length);
 
-            int[] bitValues = [250, 230, 180, 130, 150, 100, 50, 10];
-
-            foreach (int bitValue in bitValues)
+            for (int bitPosition = 0; bitPosition < 8; bitPosition++)
             {
-                for (int i = 0; i < pixelData.Length; i++)
+                byte[] slicedPixelData = new byte[pixelData.Length];
+                Array.Copy(pixelData, slicedPixelData, pixelData.Length);
+
+                for (int i = 0; i < slicedPixelData.Length; i++) // Пройдемся нашей битовой маской по каждому пикселю
                 {
-                    pixelData[i] = (byte)(pixelData[i] & bitValue);
+                    int bitValue = (slicedPixelData[i] >> bitPosition) & 1;
+                    slicedPixelData[i] = (byte)(bitValue * 255); // Увеличиваем яркость (Каждый 0 бит будет 0, а 1 будет 255)
                 }
-                string outputFilePath = Path.Combine(filepath.Replace(".bmp", "_slices"), $"slice_{bitValue}.bmp");
 
-                using FileStream outFile = new(outputFilePath, FileMode.Create, FileAccess.Write);
-                outFile.Write(header, 0, header.Length);
-                outFile.Write(pixelData, 0, pixelData.Length);
+                string slicedImagePath = Path.Combine(outputDirectory, $"bit_slice_gray_{bitPosition}.bmp");
+                using FileStream slicedImage = new(slicedImagePath, FileMode.Create, FileAccess.Write);
+                slicedImage.Write(header, 0, header.Length);
+                slicedImage.Write(slicedPixelData, 0, slicedPixelData.Length);
             }
-
             ColorComponentsReady.MessageQueue?.Enqueue(
                 "Файл BMP был разделён на срезы",
                 null,

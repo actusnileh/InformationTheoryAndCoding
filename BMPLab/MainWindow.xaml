@@ -65,6 +65,13 @@
                                     <Run x:Name="Height_Header" Text=""/>
                                 </TextBlock>
                             </TreeViewItem>
+                            
+                            <TreeViewItem
+                          Header="Начало изображения">
+                                <TextBlock>
+                                    <Run x:Name="ImageStart_Header" Text=""/>
+                                </TextBlock>
+                            </TreeViewItem>
 
                             <TreeViewItem
                           Header="Число пикселей">
