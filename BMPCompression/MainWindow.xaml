@@ -1,0 +1,75 @@
+﻿<Window x:Class="BMPCompression.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        Style="{StaticResource MaterialDesignWindow}"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        ResizeMode="NoResize"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BMPCompression"
+        mc:Ignorable="d"
+        Title="BMPCompression" Height="300" Width="346">
+    <Grid>
+        <StackPanel Orientation="Vertical">
+            <materialDesign:Card Padding="5" Margin="10">
+                <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock x:Name="TextCompressed" 
+                        Text="Сжатие изображения (Задание №1)" 
+                        HorizontalAlignment="Center" 
+                        Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                        Margin="0,0,0,16" TextAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button 
+                        x:Name="DeflateImage"
+                        Content="Deflate"
+                        IsEnabled="True"
+                        Width="130"
+                        Style="{StaticResource MaterialDesignFlatMidBgButton}" 
+                        Margin="0,0,8,0" Click="DeflateImage_Click"/>
+                        <Button 
+                        x:Name="InflateImage"
+                        Content="Inflate"
+                        Width="130"
+                        IsEnabled="True"
+                        Style="{StaticResource MaterialDesignFlatMidBgButton}" Click="InflateImage_Click"/>
+                    </StackPanel>
+                    <ProgressBar x:Name="ProgressBar" Margin="0,8,0,0"/>
+                </StackPanel>
+            </materialDesign:Card>
+            <materialDesign:Card Padding="5" Margin="10">
+                <StackPanel Orientation="Vertical">
+                    <TextBlock x:Name="SecretBMP" 
+                        Text="Внесение секрета (Задание №2)" 
+                        HorizontalAlignment="Center" 
+                        Style="{StaticResource MaterialDesignSubtitle2TextBlock}"
+                        Margin="0,0,0,16" TextAlignment="Center"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                        <Button 
+                            x:Name="ContainerButton"
+                            Content="Контейнер"
+                            IsEnabled="True"
+                            Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                            HorizontalAlignment="Center"
+                            Width="130"
+                            Margin="0,0,8,0" Click="ContainerButton_Click"/>
+                        <Button 
+                            x:Name="SecretButton"
+                            Content="Секрет"
+                            IsEnabled="False"
+                            Width="130"
+                            Style="{StaticResource MaterialDesignFlatMidBgButton}"
+                            HorizontalAlignment="Center" Click="SecretButton_Click"/>
+                    </StackPanel>
+                        <Button 
+                            x:Name="CreateSecretButton"
+                            Content="Создать"
+                            IsEnabled="False"
+                            Width="130"
+                            Margin="0,8,0,0"
+                            Style="{StaticResource MaterialDesignPaperButton}"
+                            HorizontalAlignment="Center" Click="CreateSecretButton_Click"/>
+                </StackPanel>
+            </materialDesign:Card>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Win32;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Text;
 using System.Windows;
@@ -195,47 +196,34 @@ namespace BMPLab
             string outputDirectory = Path.Combine(directory, fileName + "_slices");
             Directory.CreateDirectory(outputDirectory);
 
-            byte[] header;
-            byte[] pixelData;
-
-            using (FileStream imgFile = new(filepath, FileMode.Open, FileAccess.Read))
+            using (Bitmap img = new(filepath))
             {
-                header = new byte[54];
-                imgFile.Read(header, 0, 54);
-                pixelData = new byte[imgFile.Length - 54];
-                imgFile.Read(pixelData, 0, pixelData.Length);
-            }
+                Bitmap new_img = ConvertToGrayscale(img); // Чернобелый
+                new_img.Save(Path.Combine(outputDirectory, "gray.png"));
 
-            for (int i = 0; i < pixelData.Length - 2; i += 3)
-            {
-                byte gray = (byte)(0.2126 * pixelData[i + 2] + 0.7152 * pixelData[i + 1] + 0.0722 * pixelData[i]);
-                pixelData[i] = gray;      // Компонент B
-                pixelData[i + 1] = gray;  // Компонент G
-                pixelData[i + 2] = gray;  // Компонент R
-            }
-
-            using FileStream grayimage = new(Path.Combine(filepath.Replace(".bmp", "_slices"), $"GRAY.bmp"), FileMode.Create, FileAccess.Write);
-            grayimage.Write(header, 0, header.Length);
-            grayimage.Write(pixelData, 0, pixelData.Length);
-
-            for (int bitPosition = 0; bitPosition < 8; bitPosition++)
-            {
-                byte[] slicedPixelData = new byte[pixelData.Length];
-                Array.Copy(pixelData, slicedPixelData, pixelData.Length);
-
-                for (int i = 0; i < slicedPixelData.Length; i++) // Пройдемся нашей битовой маской по каждому пикселю
+                for (int bit_position = 0; bit_position < 8; bit_position++)
                 {
-                    int bitValue = (slicedPixelData[i] >> bitPosition) & 1;
-                    slicedPixelData[i] = (byte)(bitValue * 255); // Увеличиваем яркость (Каждый 0 бит будет 0, а 1 будет 255)
-                }
+                    Bitmap sliced_img = new(new_img.Width, new_img.Height);
 
-                string slicedImagePath = Path.Combine(outputDirectory, $"bit_slice_gray_{bitPosition}.bmp");
-                using FileStream slicedImage = new(slicedImagePath, FileMode.Create, FileAccess.Write);
-                slicedImage.Write(header, 0, header.Length);
-                slicedImage.Write(slicedPixelData, 0, slicedPixelData.Length);
+                    for (int x = 0; x < new_img.Width; x++)
+                    {
+                        for (int y = 0; y < new_img.Height; y++)
+                        {
+                            Color pixel_color = new_img.GetPixel(x, y);
+
+                            int new_pixel = (pixel_color.R >> bit_position) & 1;
+
+                            Color newColor = Color.FromArgb(new_pixel * 255, new_pixel * 255, new_pixel * 255);
+
+                            sliced_img.SetPixel(x, y, newColor); // 1 - 255, 0-0
+                        }
+                    }
+
+                    sliced_img.Save(Path.Combine(outputDirectory, $"bit_slice_gray_{bit_position}.png"));
+                }
             }
             ColorComponentsReady.MessageQueue?.Enqueue(
-                "Файл BMP был разделён на срезы",
+                "Файл разделен на срезы.",
                 null,
                 null,
                 null,
@@ -243,6 +231,26 @@ namespace BMPLab
                 true,
                 TimeSpan.FromSeconds(3)
             );
+        }
+        static Bitmap ConvertToGrayscale(Bitmap img)
+        {
+            Bitmap new_img = new(img.Width, img.Height);
+
+            for (int x = 0; x < img.Width; x++)
+            {
+                for (int y = 0; y < img.Height; y++)
+                {
+                    Color pixel_color = img.GetPixel(x, y);
+
+                    int gray_value = (int)(pixel_color.R * 0.299 + pixel_color.G * 0.587 + pixel_color.B * 0.114);
+
+                    Color newColor = Color.FromArgb(gray_value, gray_value, gray_value);
+
+                    new_img.SetPixel(x, y, newColor);
+                }
+            }
+
+            return new_img;
         }
 
         void GoToDirectory_Click(object sender, RoutedEventArgs e)
