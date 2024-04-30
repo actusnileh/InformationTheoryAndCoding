@@ -171,7 +171,26 @@ namespace BMPCompression
 
         void CreateSecretButton_Click(object sender, RoutedEventArgs e)
         {
+            byte[] byteString;
+            using (FileStream file = new FileStream(secret_filepath, FileMode.Open, FileAccess.Read))
+            {
+                byteString = new byte[file.Length];
+                file.Read(byteString, 0, (int)file.Length);
+            }
+            
+            // Преобразование байтов в строку Base64
+            string base64String = Convert.ToBase64String(byteString);
 
+            // Кодирование сообщения в изображение
+            LSB.Encode(container_filepath, base64String, 8);
+
+            // Декодирование изображения и сохранение его в файл
+            byte[] decodedByteString = Convert.FromBase64String(LSB.Decode(container_filepath.Replace(".bmp", "_encoded.bmp"), base64String.Length, 8));
+
+            using (FileStream bmpFile = new(container_filepath.Replace(".bmp", "_decoded.bmp"), FileMode.Create, FileAccess.Write))
+            {
+                bmpFile.Write(decodedByteString, 0, decodedByteString.Length);
+            }
         }
     }
 }
