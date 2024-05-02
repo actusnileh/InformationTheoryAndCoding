@@ -182,10 +182,10 @@ namespace BMPCompression
             string base64String = Convert.ToBase64String(byteString);
 
             // Кодирование сообщения в изображение
-            LSB.Encode(container_filepath, base64String, 8);
+            LSB.Encode(container_filepath, base64String, 2);
 
             // Декодирование изображения и сохранение его в файл
-            byte[] decodedByteString = Convert.FromBase64String(LSB.Decode(container_filepath.Replace(".bmp", "_encoded.bmp"), base64String.Length, 8));
+            byte[] decodedByteString = Convert.FromBase64String(LSB.Decode(container_filepath.Replace(".bmp", "_encoded.bmp"), base64String.Length, 2));
 
             using (FileStream bmpFile = new(container_filepath.Replace(".bmp", "_decoded.bmp"), FileMode.Create, FileAccess.Write))
             {

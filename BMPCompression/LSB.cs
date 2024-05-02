@@ -31,17 +31,17 @@ namespace BMPCompression
 
                 for (int i = 0; i < 8; i += degree) // Внедряем наш секрет
                 {
-                    byte imgByte = (byte)inputImage.ReadByte();
-                    if (imgByte == -1) break;
-                    imgByte &= imgMask;
-                    byte bits = (byte)(symbolCode & secretMask);
-                    bits >>= 8 - degree;
-                    imgByte |= bits;
-                    outputImage.WriteByte(imgByte);
-                    symbolCode <<= degree;
+                    byte imgByte = (byte)inputImage.ReadByte(); // Читаем байт изображения
+                    if (imgByte == -1) break; // Проверяем что не конец
+                    imgByte &= imgMask; // Применяем маску изображения к байту
+                    byte bits = (byte)(symbolCode & secretMask); // Получаем биты секрета
+                    bits >>= 8 - degree; // Сдвигаем биты
+                    imgByte |= bits; // Применяем к изображению
+                    outputImage.WriteByte(imgByte); // Записываем измененный байт с секретом
+                    symbolCode <<= degree; // Сдвигаем код символа
                 }
             }
-            inputImage.CopyTo(outputImage);
+            inputImage.CopyTo(outputImage); // Записываем остальную часть
             inputImage.Close();
             outputImage.Close();
             return true; // Если все без проблем, возвращаем true
@@ -54,28 +54,28 @@ namespace BMPCompression
                 return null;
             }
 
-            FileStream encodeImage = File.Open(encode_path, FileMode.Open, FileAccess.Read);
-            encodeImage.Seek(BMP_HEADER_SIZE, SeekOrigin.Begin);
-            (byte _, byte imgMask) = GenerateMasks(degree);
-            imgMask = (byte)~imgMask;
+            FileStream encodeImage = File.Open(encode_path, FileMode.Open, FileAccess.Read); // Открываем закодированный файл
+            encodeImage.Seek(BMP_HEADER_SIZE, SeekOrigin.Begin); // Пропускаем заголовок
+            (byte _, byte imgMask) = GenerateMasks(degree); // Генерируем маску изображения для извлечения символов
+            imgMask = (byte)~imgMask; // Инвертируем маску
 
-            StringBuilder textBuilder = new();
-            int read = 0;
+            StringBuilder textBuilder = new(); // Тут будем хранить текст
+            int read = 0; // Счетник прочитанных символов
 
             while (read < symbols_count)
             {
                 int symbol = 0;
 
-                for (int i = 0; i < 8; i += degree)
+                for (int i = 0; i < 8; i += degree) // Достаем наши байты из картинки
                 {
-                    byte imgByte = (byte)encodeImage.ReadByte();
-                    if (imgByte == -1) break;
-                    imgByte &= imgMask;
-                    symbol <<= degree;
-                    symbol |= imgByte;
+                    byte imgByte = (byte)encodeImage.ReadByte(); // Читаем байт
+                    if (imgByte == -1) break; // Проверяем на конец
+                    imgByte &= imgMask; // Применяем маску
+                    symbol <<= degree; // Сдвигаем символ
+                    symbol |= imgByte; // Добавляем новые биты
                 }
 
-                if (Convert.ToChar(symbol) == '\n' && Environment.NewLine.Length == 2)
+                if (Convert.ToChar(symbol) == '\n' && Environment.NewLine.Length == 2) // Учитываем символ новой строки (на всякий случай)
                 {
                     read++;
                 }
