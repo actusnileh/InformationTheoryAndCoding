@@ -8,48 +8,60 @@
         ResizeMode="NoResize"
         xmlns:local="clr-namespace:Hamming"
         mc:Ignorable="d"
-        Title="Hamming" Height="183" Width="373">
+        Title="Hamming" Height="188" Width="413">
     <Grid Margin="10">
         <StackPanel Orientation="Horizontal">
             <materialDesign:Card>
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBox
-                      x:Name="CodeTextBox"
-                      materialDesign:HintAssist.Hint="Код"
-                      TextAlignment="Center"
-                      Margin="5"
-                      VerticalAlignment="Top"
-                      PreviewTextInput="CodeTextBox_PreviewTextInput"
-                      Width="120" Height="30">
+                          x:Name="CodeTextBox"
+                          materialDesign:HintAssist.Hint="Код"
+                          TextAlignment="Center"
+                          Margin="5"
+                          VerticalAlignment="Top"
+                          PreviewTextInput="CodeTextBox_PreviewTextInput"
+                          Width="120" Height="30">
                     </TextBox>
                     <Button x:Name="EncodeButton"
-                            Content="Закодировать" 
-                            IsEnabled="True"
-                            Margin="5" 
-                            MinWidth="100" MaxWidth="200"
-                            MinHeight="30" MaxHeight="40" Click="EncodeButton_Click"/>
-                    <Button Content="Декодировать" 
-                    IsEnabled="False"
-                    Margin="5" 
-                    MinWidth="100" MaxWidth="200"
-                    MinHeight="30" MaxHeight="40"/>
+                                Content="Закодировать" 
+                                IsEnabled="True"
+                                Margin="5" 
+                                MinWidth="100"
+                                MinHeight="30" Click="EncodeButton_Click"/>
+                    <Button x:Name="DecodeButton"
+                        Content="Декодировать" 
+                        IsEnabled="True"
+                        Margin="5" 
+                        MinWidth="100"
+                        MinHeight="30" Click="DecodeButton_Click"/>
                 </StackPanel>
             </materialDesign:Card>
             <GroupBox
-                  Margin="16,0,0,0"
-                  Header="Результат"
-                  Width="175"
-                  Style="{StaticResource MaterialDesignCardGroupBox}">
+                      Margin="16,0,0,0"
+                      Header="Результат"
+                      MinWidth="220"
+                      Style="{StaticResource MaterialDesignCardGroupBox}">
                 <Grid
-                    Height="50">
+                    MinHeight="50">
+                    <TextBox
+                        x:Name="ResultTextBlock"
+                        TextAlignment="Center"
+                        VerticalAlignment="Center"
+                        IsReadOnly="True"
+                        Text="" />
                     <TextBlock
-                      VerticalAlignment="Center"
-                      Text="" />
+                        x:Name="ErrorTextBlock"
+                        TextAlignment="Center"
+                        Foreground="DarkRed"
+                        VerticalAlignment="Bottom"
+                        Text=""
+                        />
                 </Grid>
             </GroupBox>
         </StackPanel>
         <materialDesign:Snackbar 
-            x:Name="SnackBarNotification"
-            MessageQueue="{materialDesign:MessageQueue}"/>
+                x:Name="SnackBarNotification"
+                MessageQueue="{materialDesign:MessageQueue}"/>
+        
     </Grid>
 </Window>

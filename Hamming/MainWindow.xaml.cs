@@ -39,7 +39,23 @@ namespace Hamming
         {
             if (CodeTextBox.Text.Length > 0)
             {
+                var result = HammingAlgorithm.Encode(CodeTextBox.Text);
+                ResultTextBlock.Text = result;
+                ErrorTextBlock.Text = "";
+            }
+            else
+            {
+                SnackBarNotification_Send("Введите код!", 2);
+            }
+        }
 
+        void DecodeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (CodeTextBox.Text.Length > 0)
+            {
+                (var result, int error) = HammingAlgorithm.Decode(CodeTextBox.Text);
+                ResultTextBlock.Text = result;
+                ErrorTextBlock.Text = error == 0 ? "" : error.ToString();
             }
             else
             {
