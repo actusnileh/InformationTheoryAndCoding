@@ -199,22 +199,20 @@ namespace BMPLab
             using (Bitmap img = new(filepath))
             {
                 Bitmap new_img = ConvertToGrayscale(img); // Чернобелый
-                new_img.Save(Path.Combine(outputDirectory, "gray.png"));
+                new_img.Save(Path.Combine(outputDirectory, "gray.bmp"));
 
-                for (int bit_position = 0; bit_position < 8; bit_position++)
+                for (int bit_position = 0; bit_position < 8; bit_position++) // Цикл, где создаем сами срезы
                 {
-                    Bitmap sliced_img = new(new_img.Width, new_img.Height);
+                    Bitmap sliced_img = new(new_img.Width, new_img.Height); // Создаем пустое bmp изображение
 
-                    for (int x = 0; x < new_img.Width; x++)
+                    for (int x = 0; x < new_img.Width; x++) // Проходимся по всем пикселям
                     {
                         for (int y = 0; y < new_img.Height; y++)
                         {
-                            Color pixel_color = new_img.GetPixel(x, y);
-
-                            int new_pixel = (pixel_color.R >> bit_position) & 1;
+                            Color pixel_color = new_img.GetPixel(x, y); 
+                            int new_pixel = (pixel_color.R >> bit_position) & 1; // Получаем бит и сдвигаемся
 
                             Color newColor = Color.FromArgb(new_pixel * 255, new_pixel * 255, new_pixel * 255);
-
                             sliced_img.SetPixel(x, y, newColor); // 1 - 255, 0-0
                         }
                     }

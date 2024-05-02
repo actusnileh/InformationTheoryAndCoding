@@ -14,23 +14,20 @@
             <materialDesign:Card>
                 <StackPanel Orientation="Vertical" VerticalAlignment="Center" HorizontalAlignment="Center">
                     <TextBox
-              x:Name="NameTextBox"
-              materialDesign:HintAssist.Hint="Код"
-              TextAlignment="Center"
-              VerticalAlignment="Top"
-              Width="120" Height="30">
-                        <TextBox.Text>
-                            <Binding
-                        Path="Name"
-                        UpdateSourceTrigger="PropertyChanged">
-                            </Binding>
-                        </TextBox.Text>
+                      x:Name="CodeTextBox"
+                      materialDesign:HintAssist.Hint="Код"
+                      TextAlignment="Center"
+                      Margin="5"
+                      VerticalAlignment="Top"
+                      PreviewTextInput="CodeTextBox_PreviewTextInput"
+                      Width="120" Height="30">
                     </TextBox>
-                    <Button Content="Закодировать" 
-                    IsEnabled="False"
-                    Margin="5" 
-                    MinWidth="100" MaxWidth="200"
-                    MinHeight="30" MaxHeight="40"/>
+                    <Button x:Name="EncodeButton"
+                            Content="Закодировать" 
+                            IsEnabled="True"
+                            Margin="5" 
+                            MinWidth="100" MaxWidth="200"
+                            MinHeight="30" MaxHeight="40" Click="EncodeButton_Click"/>
                     <Button Content="Декодировать" 
                     IsEnabled="False"
                     Margin="5" 
@@ -51,5 +48,8 @@
                 </Grid>
             </GroupBox>
         </StackPanel>
+        <materialDesign:Snackbar 
+            x:Name="SnackBarNotification"
+            MessageQueue="{materialDesign:MessageQueue}"/>
     </Grid>
 </Window>
