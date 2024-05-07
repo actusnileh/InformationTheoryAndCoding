@@ -8,7 +8,7 @@
         ResizeMode="NoResize"
         xmlns:local="clr-namespace:Hamming"
         mc:Ignorable="d"
-        Title="Hamming" Height="188" Width="413">
+        Title="Hamming" Height="224" Width="413">
     <Grid Margin="10">
         <StackPanel Orientation="Horizontal">
             <materialDesign:Card>
@@ -34,6 +34,12 @@
                         Margin="5" 
                         MinWidth="100"
                         MinHeight="30" Click="DecodeButton_Click"/>
+                    <Button x:Name="MatrixButton"
+                        Content="Матрица" 
+                        IsEnabled="True"
+                        Margin="5" 
+                        MinWidth="100"
+                        MinHeight="30" Click="MatrixButton_Click"/>
                 </StackPanel>
             </materialDesign:Card>
             <GroupBox
