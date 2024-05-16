@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using static System.Net.Mime.MediaTypeNames;
+using System.Text.RegularExpressions;
 
 namespace ConvulationCode
 {
@@ -10,14 +10,31 @@ namespace ConvulationCode
             InitializeComponent();
         }
 
-        int slider_value = 0;
         bool codeswitcher_result = false;
-
+        string pattern = "^[01]+$";
         void ValueSlider_ValueChanged(object sender, System.Windows.RoutedPropertyChangedEventArgs<double> e)
         {
-            slider_value = (int)e.NewValue;
-            ValueSliderLabel.Content = slider_value.ToString();
+            int sliderValue = (int)e.NewValue;
+            ValueSliderLabel.Content = (sliderValue).ToString();
+
+            string oldSequence = CodeTextBox.Text;
+            int sequenceLength = oldSequence.Length;
+
+            int bitsToModify = (int)Math.Ceiling(sequenceLength * sliderValue / 100.0);
+
+            Random random = new();
+
+            StringBuilder modifiedSequence = new(oldSequence);
+
+            for (int i = 0; i < bitsToModify; i++)
+            {
+                int index = random.Next(sequenceLength);
+
+                modifiedSequence[index] = (modifiedSequence[index] == '0') ? '1' : '0';
+            }
+            CodeTextBox.Text = modifiedSequence.ToString();
         }
+
 
         void CodeSwitcher_Checked(object sender, System.Windows.RoutedEventArgs e)
         {
@@ -31,40 +48,62 @@ namespace ConvulationCode
 
         void EncodeButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (!codeswitcher_result)
+            if (CodeTextBox.Text.Length == 0)
             {
-                ResultTextBox.Text = Convulation.Encode(CodeTextBox.Text);
+                return;
             }
             else
             {
-                string bitSequence = string.Join("", CodeTextBox.Text.Select(c => Convert.ToString(c, 2).PadLeft(8, '0')));
-                ResultTextBox.Text = Convulation.Encode(bitSequence);
+                if (!codeswitcher_result && Regex.IsMatch(CodeTextBox.Text, pattern))
+                {
+                    CodeSwitcher.IsChecked = false;
+                    ResultTextBox.Text = Convulation.Encode(CodeTextBox.Text);
+                }
+                else
+                {
+                    CodeSwitcher.IsChecked = true;
+                    string bitSequence = string.Join("", CodeTextBox.Text.Select(c => Convert.ToString(c, 2).PadLeft(8, '0')));
+                    ResultTextBox.Text = Convulation.Encode(bitSequence);
+                }
             }
         }
 
         void DecodeButton_Click(object sender, System.Windows.RoutedEventArgs e)
         {
-            if (!codeswitcher_result)
-                ResultTextBox.Text = Convulation.Decode(CodeTextBox.Text);
+            if (CodeTextBox.Text.Length == 0)
+            {
+                return;
+            }
             else
             {
-                string bitSequence = Convulation.Decode(CodeTextBox.Text);
-
-                List<string> bytes = [];
-
-                for (int i = 0; i < bitSequence.Length; i += 8)
+                if (!Regex.IsMatch(CodeTextBox.Text, pattern))
+                    return;
+                if (!codeswitcher_result)
                 {
-                    bytes.Add(bitSequence.Substring(i, 8));
+                    CodeSwitcher.IsChecked = false;
+                    ResultTextBox.Text = Convulation.Decode(CodeTextBox.Text);
                 }
-
-                StringBuilder text = new StringBuilder();
-                foreach (string byteStr in bytes)
+                else
                 {
-                    int charCode = Convert.ToInt32(byteStr, 2);
-                    text.Append((char)charCode);
-                }
+                    CodeSwitcher.IsChecked = true;
+                    string bitSequence = Convulation.Decode(CodeTextBox.Text);
 
-                ResultTextBox.Text = text.ToString();
+                    List<string> bytes = [];
+
+                    for (int i = 0; i < bitSequence.Length; i += 8)
+                    {
+                        bytes.Add(bitSequence.Substring(i, 8));
+                    }
+
+                    StringBuilder text = new StringBuilder();
+                    foreach (string byteStr in bytes)
+                    {
+                        int charCode = Convert.ToInt32(byteStr, 2);
+                        text.Append((char)charCode);
+                    }
+
+                    ResultTextBox.Text = text.ToString();
+                }
             }
         }
     }

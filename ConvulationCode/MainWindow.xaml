@@ -25,6 +25,12 @@
                         TextAlignment="Center"
                         Margin="0,8,0,8"
                         Height="35" Width="193"/>
+
+                    <ui:Button
+                        x:Name="EncodeButton"
+                        Content="Закодировать"
+                        Height="35" Width="193"
+                        Margin="0,0,0,8" Click="EncodeButton_Click"/>
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
                         <Slider x:Name="ValueSlider" 
                             HorizontalAlignment="Center"
@@ -36,12 +42,8 @@
                             Margin="8,0,0,0" VerticalContentAlignment="Center" 
                             Foreground="Gray"/>
                     </StackPanel>
-                    <ui:Button
-                        x:Name="EncodeButton"
-                        Content="Закодировать"
-                        Height="35" Width="193"
-                        Margin="0,8,0,8" Click="EncodeButton_Click"/>
                     <ui:Button x:Name="DecodeButton"
+                        Margin="0,8,0,0"
                         Content="Раскодировать"
                         Height="35" Width="193" Click="DecodeButton_Click"/>
 
@@ -56,6 +58,7 @@
                         Height="35" Width="193"/>
                 </StackPanel>
             </ui:Card>
+            
         </StackPanel>
     </StackPanel>
 </ui:FluentWindow>
