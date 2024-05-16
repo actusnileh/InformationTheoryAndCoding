@@ -1,0 +1,61 @@
+﻿<ui:FluentWindow x:Class="ConvulationCode.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:ui="http://schemas.lepo.co/wpfui/2022/xaml"
+        xmlns:local="clr-namespace:ConvulationCode"
+        mc:Ignorable="d"
+        WindowStyle="None"
+        Background="Transparent"  
+        ResizeMode="NoResize"
+        MinHeight="365" MinWidth="240"
+        Width="238" Height="365">
+    <StackPanel Margin="0,0,0,0">
+        <ui:TitleBar Title="ConvulationCode" ShowMaximize="False"/>
+        <StackPanel Orientation="Horizontal">
+            <ui:Card Margin="8">
+                <StackPanel Height="Auto" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <ui:ToggleSwitch 
+                        x:Name="CodeSwitcher"
+                        HorizontalAlignment="Center"
+                        OnContent="Текст" OffContent="Код" Checked="CodeSwitcher_Checked" Unchecked="CodeSwitcher_Unchecked"/>
+                    <ui:TextBox x:Name="CodeTextBox"
+                        PlaceholderText="10101010"
+                        TextAlignment="Center"
+                        Margin="0,8,0,8"
+                        Height="35" Width="193"/>
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Slider x:Name="ValueSlider" 
+                            HorizontalAlignment="Center"
+                            TickPlacement="BottomRight"
+                            Minimum="0" Maximum="9" 
+                            ValueChanged="ValueSlider_ValueChanged" Width="78"/>
+                        <Label x:Name="ValueSliderLabel"
+                            Content="0" 
+                            Margin="8,0,0,0" VerticalContentAlignment="Center" 
+                            Foreground="Gray"/>
+                    </StackPanel>
+                    <ui:Button
+                        x:Name="EncodeButton"
+                        Content="Закодировать"
+                        Height="35" Width="193"
+                        Margin="0,8,0,8" Click="EncodeButton_Click"/>
+                    <ui:Button x:Name="DecodeButton"
+                        Content="Раскодировать"
+                        Height="35" Width="193" Click="DecodeButton_Click"/>
+
+                    <Separator Margin="0,4,0,4"/>
+
+                    <Label Content="Результат:" 
+                        HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    <ui:TextBox x:Name="ResultTextBox"
+                        Margin="0,8,0,0"
+                        TextAlignment="Center"
+                        IsReadOnly="True"
+                        Height="35" Width="193"/>
+                </StackPanel>
+            </ui:Card>
+        </StackPanel>
+    </StackPanel>
+</ui:FluentWindow>
