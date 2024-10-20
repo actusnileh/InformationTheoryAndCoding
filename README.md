@@ -1,7 +1,7 @@
 # Теория информации и кодирования
 
 <p align="center">
-  <img align="center" width="280" src="https://cdn-icons-png.flaticon.com/512/59/59118.png" alt="Алгоритмы"/>
+  <img align="center" width="280" src="https://www.pngmart.com/files/23/Coding-PNG-Picture.png" alt="Алгоритмы"/>
 </p>
 
 Этот проект представляет собой реализацию лабораторных работ по курсу **Теория информации и кодирования.** В нем реализованы алгоритмы и методы, относящиеся к теории информации и кодирования, на языках C# и Python.
