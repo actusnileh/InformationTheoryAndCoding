@@ -26,12 +26,12 @@
 1.  Клонируйте репозиторий:
 
         ````bash
-        git clone https://github.com/ваш_пользователь/Теория_информации_и_кодирования.git
+        git clone https://github.com/actusnileh/InformationTheoryAndCoding.git
 
 2.  Перейдите в директорию проекта:
 
         ```bash
-        cd Теория*информации*и_кодирования
+        cd InformationTheoryAndCoding
         ```
 
 3.  Для запуска C# приложений используйте .NET SDK. Убедитесь, что он установлен, и выполните команду:
@@ -43,5 +43,5 @@
 4.  Для Python скриптов убедитесь, что у вас установлен Python 3. Затем выполните:
 
     ```bash
-    python имя_скрипта.py
+    python ./СonvolutionalСode_Python/main.py
     ```
